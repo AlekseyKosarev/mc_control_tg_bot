@@ -1,0 +1,24 @@
+# Telegram bot token
+BOT_TOKEN=
+
+# Server info
+SERVER_IP=
+SERVER_PORT=
+RCON_PASSWORD=
+PING_INTERVAL=
+REQUEST_COOLDOWN=
+
+# WoL
+PING_WAIT=
+SERVER_MAC=
+
+# Save manager
+SAVE_INTERVAL_TO_REMOTE=
+
+# SSH settings for save to remote
+SSH_USER=
+SSH_DATA_PATH=
+SSH_KEY_PATH=
+
+# Users
+SAVE_INTERVAL=

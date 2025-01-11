@@ -1,5 +1,7 @@
 Telegram Bot for Controlling a Minecraft Server!
 
+For first - create .env file with your token and server settings
+
 Features:
 
     Auth System:
