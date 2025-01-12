@@ -5,7 +5,7 @@ from dotenv import load_dotenv
 load_dotenv()
 
 # Telegram
-BOT_TOKEN = os.getenv("BOT_TOKEN", "")
+BOT_TOKEN = os.getenv("BOT_TOKEN")
 
 # Server info and RCON
 SERVER_IP = os.getenv("SERVER_IP")
@@ -29,7 +29,6 @@ SSH_KEY_PATH = os.getenv("SSH_KEY_PATH", LOCAL_DATA_PATH + "id_rsa")
 
 # Users
 SAVE_INTERVAL = int(os.getenv("SAVE_INTERVAL", 10))
-
 def print_config():
     config_data = {
         "BOT_TOKEN": BOT_TOKEN,

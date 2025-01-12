@@ -19,7 +19,6 @@ async def main():
     await user_manager.start_async()
     await mc_server_manager.start_async()
     await upload_to_remote.start_sync_remote()
-
     bot = Bot(token=config.BOT_TOKEN, default=DefaultBotProperties(parse_mode=ParseMode.HTML))
     dp = Dispatcher(storage=MemoryStorage())
     dp.include_router(router)
