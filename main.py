@@ -13,6 +13,8 @@ import mc_server_manager
 import upload_to_remote
 
 async def main():
+    #test config
+    config.print_config()
     #запуск фоновых процессов
     await user_manager.start_async()
     await mc_server_manager.start_async()
