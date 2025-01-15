@@ -1,60 +1,56 @@
-import os
-import paramiko
+import subprocess
+import logging
 from config import SERVER_IP, SSH_USER, SSH_KEY_PATH, SSH_DATA_PATH
 
+# Настройка логирования
+logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 
-def create_ssh_client(server_ip=SERVER_IP, ssh_user=SSH_USER, ssh_key_path=SSH_KEY_PATH):
-    """Создает и возвращает SSH клиент."""
-    ssh = paramiko.SSHClient()
-    ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
-    
+def create_ssh_command(command):#"-o", "StrictHostKeyChecking=no",
+    """Создает команду SSH для выполнения."""
+    return f'ssh -o StrictHostKeyChecking=no -i {SSH_KEY_PATH} {SSH_USER}@{SERVER_IP} "{command}"'
+
+def upload_file_to_remote(local_file_path, remote_file_name):
+    """Загружает файл на удаленный сервер через SCP."""
+    scp_command = f'scp -o StrictHostKeyChecking=no -i {SSH_KEY_PATH} {local_file_path} {SSH_USER}@{SERVER_IP}:{SSH_DATA_PATH}{remote_file_name}'
     try:
-        ssh.connect(server_ip, username=ssh_user, key_filename=ssh_key_path, timeout=1)
-        return ssh
-    except paramiko.ssh_exception.NoValidConnectionsError:
-        raise ConnectionError(f"Не удалось подключиться к серверу {server_ip}. Сервер недоступен.")
-    except paramiko.ssh_exception.AuthenticationException:
-        raise ValueError("Ошибка аутентификации. Проверьте имя пользователя и ключ.")
-    
+        # logging.info(f"Загрузка файла {local_file_path} на {SSH_DATA_PATH}{remote_file_name}...")
+        subprocess.run(scp_command, shell=True, check=True)
+        logging.info(f"Файл {local_file_path} успешно загружен на {SSH_DATA_PATH}{remote_file_name}.")
+    except subprocess.CalledProcessError as e:
+        logging.error(f"Ошибка при загрузке файла: {e}")
 
-def upload_file_to_remote(ssh_client, local_file_path, remote_file_name):
-    """Загружает файл на удаленный сервер через SFTP."""
-    with ssh_client.open_sftp() as sftp:
-        sftp.put(local_file_path, SSH_DATA_PATH + remote_file_name)
-
-def execute_ssh_command(ssh_client, command):
+def execute_ssh_command(command):
     """Выполняет произвольную команду на удаленном сервере через SSH."""
-    stdin, stdout, stderr = ssh_client.exec_command(command)
-    exit_status = stdout.channel.recv_exit_status()  # Ждем завершения команды
-
-    output = stdout.read().decode('utf-8')
-    error = stderr.read().decode('utf-8')
-
-    if exit_status == 0:
-        return output
-    else:
-        raise Exception(f"Ошибка выполнения команды: {error}")
-
-def suspend_remote_machine(ssh_client):
-    """Выключает удаленный компьютер через SSH."""
-    command = 'sudo systemctl suspend'  # Команда для немедленного выключения
+    ssh_command = create_ssh_command(command)
     try:
-        execute_ssh_command(ssh_client, command)
-        print("Команда на выключение отправлена.")
+        logging.info(f"Выполнение команды: {ssh_command}")
+        result = subprocess.run(ssh_command.split(), check=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        output = result.stdout.decode('utf-8')
+        logging.info(f"Вывод команды: {output}")
+        return output
+    except subprocess.CalledProcessError as e:
+        logging.error(f"Ошибка выполнения команды: {e.stderr.decode('utf-8')}")
+        raise Exception(f"Ошибка выполнения команды: {e.stderr.decode('utf-8')}")
+
+
+def suspend_remote_machine():
+    """Выключает удаленный компьютер через SSH."""
+    command = 'sudo systemctl suspend'  # Команда для приостановки
+    try:
+        logging.info("Отправка команды на приостановку удаленного компьютера...")
+        execute_ssh_command(command)
+        logging.info("Команда на приостановку отправлена.")
     except Exception as e:
-        print(f"Ошибка при попытке выключить удаленный компьютер: {e}")
+        logging.error(f"Ошибка при попытке приостановить удаленный компьютер: {e}")
 
 # Пример использования
 if __name__ == "__main__":
-    try:
-        ssh_client = create_ssh_client()
-
-        # Пример выполнения команды
-        command_output = execute_ssh_command(ssh_client, 'ls -l')
-        command_output = execute_ssh_command(ssh_client, './sleep_server.sh')
-        print("Вывод команды:", command_output)
-
-        # Выключение удаленного компьютера
-        suspend_remote_machine(ssh_client)
-    finally:
-        ssh_client.close()
+    #Вывод конфигурационных параметров
+    logging.info(f"Конфигурация: SERVER_IP={SERVER_IP}, SSH_USER={SSH_USER}, SSH_KEY_PATH={SSH_KEY_PATH}, SSH_DATA_PATH={SSH_DATA_PATH}")
+    #
+    # try:
+    #     # Пример выполнения команды
+    #     command_output = execute_ssh_command('ls')
+    #     #print("Вывод команды:", command_output)
+    # except Exception as e:
+    #     logging.error(f"Произошла ошибка: {e}")

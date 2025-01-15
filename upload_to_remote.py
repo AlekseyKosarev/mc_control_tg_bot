@@ -1,5 +1,3 @@
-import os
-import datetime
 import asyncio
 from enums import FileNamesEnum  # Импортируйте ваши перечисления
 from json_file_manager import duplicate_to_remote  # Импортируйте вашу функцию
@@ -10,9 +8,7 @@ async def copy_files_to_remote():
         if server_data["online"]:
         # Перебираем все файлы, которые нужно скопировать
             for file_name in FileNamesEnum:
-                #print(f"copy {file_name} ...")
                 duplicate_to_remote(file_name)  # Копируем файл на удаленный сервер
-        # else:
 
         await asyncio.sleep(SAVE_INTERVAL_TO_REMOTE)  # Ждем заданный интервал
 

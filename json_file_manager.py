@@ -1,10 +1,9 @@
 import json
 import os
-import paramiko
 import datetime
 from config import LOCAL_DATA_PATH
 from enums import FileNamesEnum
-from ssh_utils import upload_file_to_remote, create_ssh_client
+from ssh_utils import upload_file_to_remote
 def get_file_path(file_name, return_with_local_path=True):
     """Возвращает путь к файлу из строки или Enum."""
     local_path = ""
@@ -65,9 +64,5 @@ def duplicate_to_remote(file_name, use_datetime=True):
     if not os.path.exists(file_path):
         raise FileNotFoundError(f"Файл {file_path} не найден для дублирования.")
     # ssh utils
-    ssh_client = create_ssh_client()
-    try:
-        upload_file_to_remote(ssh_client, file_path, os.path.basename(new_file_name))
-        print(f"Файл {os.path.basename(new_file_name)} успешно загружен на удаленный сервер.")
-    finally:
-        ssh_client.close()
+    upload_file_to_remote(file_path, os.path.basename(new_file_name))
+    # print(f"Файл {os.path.basename(new_file_name)} успешно загружен на удаленный сервер.")

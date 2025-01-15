@@ -25,7 +25,7 @@ SAVE_INTERVAL_TO_REMOTE = int(os.getenv("SAVE_INTERVAL_TO_REMOTE", 1800))
 # SSH settings for save to remote
 SSH_USER = os.getenv("SSH_USER")
 SSH_DATA_PATH = os.getenv("SSH_DATA_PATH")
-SSH_KEY_PATH = os.getenv("SSH_KEY_PATH", LOCAL_DATA_PATH + "id_rsa")
+SSH_KEY_PATH = os.path.normpath(os.getenv("SSH_KEY_PATH", LOCAL_DATA_PATH + "id_rsa"))
 
 # Users
 SAVE_INTERVAL = int(os.getenv("SAVE_INTERVAL", 10))
