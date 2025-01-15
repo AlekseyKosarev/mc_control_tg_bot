@@ -1,6 +1,5 @@
 import json
 import os
-import paramiko
 import datetime
 from config import LOCAL_DATA_PATH
 from enums import FileNamesEnum

@@ -1,0 +1,23 @@
+FROM python:3.11 AS builder
+
+RUN apt-get update && apt-get install -y \
+    build-essential \
+    libssl-dev \
+    libffi-dev \
+    python3-dev \
+    curl \
+    && rm -rf /var/lib/apt/lists/*
+
+# Установите Rust и Cargo
+RUN curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
+
+# Добавьте Rust в PATH
+ENV PATH="/root/.cargo/bin:${PATH}"
+
+RUN pip install --upgrade pip setuptools
+
+RUN pip install cffi
+
+RUN pip install cryptography==44.0.0
+
+CMD ["python", "-c", "import cryptography; print(cryptography.__version__)"]

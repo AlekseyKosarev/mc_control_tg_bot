@@ -1,4 +1,3 @@
-import os
 import paramiko
 from config import SERVER_IP, SSH_USER, SSH_KEY_PATH, SSH_DATA_PATH
 
