@@ -52,10 +52,18 @@ async def start_server_handler(callback: CallbackQuery):
     user_role = user_manager.get_user_role(user_id)
     if user_role == enums.UserRole.MODERATOR or user_role == enums.UserRole.ADMIN:
         await callback.message.answer("Пинаю сервер...")
+        sticker_file_id_click = 'CAACAgIAAxkBAAELrdZniTj3HVKWKjMVkrWpPZD1eGxMdQAC9hwAAmvK-EoB-wHSPVRShjYE'
+        sticker_file_id_amen = 'CAACAgIAAxkBAAELrdxniTo5mzPdf7T7YaDiUQIjEf-WrwACdBUAAl9msEl5vX_OqlTFGTYE'
+        await callback.message.reply_sticker(sticker_file_id_click)
+        await callback.message.reply_sticker(sticker_file_id_amen)
         response = "Сервер оказался сильней... :( или нет, нажми /start"
+        sticker_file_id_response = 'CAACAgIAAxkBAAELrgRniTtpFdaQpf2YmXMpJb3FHTk_sgAC5zMAAvyF0EhRH0ZM6KsQGjYE'
         if wake_and_check():
             response = "Сервер успешно пробудился"
+            sticker_file_id_response = 'CAACAgIAAxkBAAELrfxniTtQE2Az-e25qB5ELuslvEYHYgACyFEAArJq-Et9qjvIbGeiujYE'
+        await callback.message.reply_sticker(sticker_file_id_response)
         await callback.message.answer(response)
+
     else:
         await callback.message.answer("Тебе не хватает прав!")
 
