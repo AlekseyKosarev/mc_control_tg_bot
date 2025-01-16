@@ -3,7 +3,7 @@ import os
 import datetime
 from config import LOCAL_DATA_PATH
 from enums import FileNamesEnum
-from ssh_utils import upload_file_to_remote
+# from ssh_utils import upload_file_to_remote
 def get_file_path(file_name, return_with_local_path=True):
     """Возвращает путь к файлу из строки или Enum."""
     local_path = ""
@@ -51,18 +51,18 @@ def delete(file_name):
     else:
         raise FileNotFoundError(f"Файл {file_path} не найден.")
 
-def duplicate_to_remote(file_name, use_datetime=True):
-    """Дублирует файл на удаленный сервер через SSH."""
-
-    file_path = get_file_path(file_name)
-
-    new_file_name = file_path
-    if use_datetime:
-        timestamp = datetime.datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
-        new_file_name = f"{new_file_name}_{timestamp}.json"
-
-    if not os.path.exists(file_path):
-        raise FileNotFoundError(f"Файл {file_path} не найден для дублирования.")
-    # ssh utils
-    upload_file_to_remote(file_path, os.path.basename(new_file_name))
-    # print(f"Файл {os.path.basename(new_file_name)} успешно загружен на удаленный сервер.")
+# def duplicate_to_remote(file_name, use_datetime=True):
+#     """Дублирует файл на удаленный сервер через SSH."""
+#
+#     file_path = get_file_path(file_name)
+#
+#     new_file_name = file_path
+#     if use_datetime:
+#         timestamp = datetime.datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
+#         new_file_name = f"{new_file_name}_{timestamp}.json"
+#
+#     if not os.path.exists(file_path):
+#         raise FileNotFoundError(f"Файл {file_path} не найден для дублирования.")
+#     # ssh utils
+#     upload_file_to_remote(file_path, os.path.basename(new_file_name))
+#     # print(f"Файл {os.path.basename(new_file_name)} успешно загружен на удаленный сервер.")

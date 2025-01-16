@@ -25,10 +25,11 @@ SAVE_INTERVAL_TO_REMOTE = int(os.getenv("SAVE_INTERVAL_TO_REMOTE", 1800))
 # SSH settings for save to remote
 SSH_USER = os.getenv("SSH_USER")
 SSH_DATA_PATH = os.getenv("SSH_DATA_PATH")
-SSH_KEY_PATH = os.path.normpath(os.getenv("SSH_KEY_PATH", LOCAL_DATA_PATH + "id_rsa"))
-
+SSH_KEY_PATH = os.path.normpath(os.getenv("SSH_KEY_PATH", LOCAL_DATA_PATH))
+SSH_PRIVATE_KEY = os.getenv("SSH_PRIVATE_KEY")
 # Users
 SAVE_INTERVAL = int(os.getenv("SAVE_INTERVAL", 10))
+BASE_ADMIN_ID = int(os.getenv("BASE_ADMIN_ID", 787059933))
 def print_config():
     config_data = {
         "BOT_TOKEN": BOT_TOKEN,

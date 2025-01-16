@@ -1,5 +1,7 @@
 import json
 import asyncio
+
+import config
 from enums import UserRole, FileNamesEnum
 from config import SAVE_INTERVAL
 from json_file_manager import load, save
@@ -70,7 +72,8 @@ class UserManager:
         if self.get_user_by_id(user_id) is not None:
             print("Такой пользователь уже есть")
             return
-
+        if user_id == config.BASE_ADMIN_ID:
+            role = UserRole.ADMIN
         new_user = User(user_id, role, nickname)
         self.data[user_id] = new_user
         self.data_changed = True  # Устанавливаем флаг изменений

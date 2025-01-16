@@ -18,7 +18,7 @@ SAVE_INTERVAL_TO_REMOTE=
 # SSH settings for save to remote
 SSH_USER=
 SSH_DATA_PATH=
-SSH_KEY_PATH=
+SSH_KEY_PATH=/mc_tg_bot/id_rsa
 
 # Users
 SAVE_INTERVAL=
