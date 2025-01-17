@@ -86,6 +86,7 @@ async def update_data_async():
                 json_file_manager.save(server_data, FileNamesEnum.SERVER_STATS, True)
         else:
             print("сервер оффлайн")
+            server_data["online"] = False
         await asyncio.sleep(PING_INTERVAL)  # Используем await для асинхронного ожидания
 
 async def start_async(): 
