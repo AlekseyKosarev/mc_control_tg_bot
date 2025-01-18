@@ -8,7 +8,7 @@ import text
 from auth import user_manager
 import enums
 from mc_server_manager import server_data
-from wake_on_lan import wake_and_check
+from wake_on_lan import wake_on_lan
 import callback_data
 router = Router()
 
@@ -50,19 +50,15 @@ async def start_server_handler(callback: CallbackQuery):
     # await callback.message.answer("Окей, запускаю сервер, подожди немного!")
     user_id = callback.from_user.id
     user_role = user_manager.get_user_role(user_id)
-    if user_role == enums.UserRole.MODERATOR or user_role == enums.UserRole.ADMIN:
-        await callback.message.answer("Пинаю сервер...")
-        sticker_file_id_click = 'CAACAgIAAxkBAAELrdZniTj3HVKWKjMVkrWpPZD1eGxMdQAC9hwAAmvK-EoB-wHSPVRShjYE'
-        sticker_file_id_amen = 'CAACAgIAAxkBAAELrdxniTo5mzPdf7T7YaDiUQIjEf-WrwACdBUAAl9msEl5vX_OqlTFGTYE'
-        await callback.message.reply_sticker(sticker_file_id_click)
-        await callback.message.reply_sticker(sticker_file_id_amen)
-        response = "Сервер оказался сильней... :( или нет, нажми /start"
-        sticker_file_id_response = 'CAACAgIAAxkBAAELrgRniTtpFdaQpf2YmXMpJb3FHTk_sgAC5zMAAvyF0EhRH0ZM6KsQGjYE'
-        if wake_and_check():
-            response = "Сервер успешно пробудился"
-            sticker_file_id_response = 'CAACAgIAAxkBAAELrfxniTtQE2Az-e25qB5ELuslvEYHYgACyFEAArJq-Et9qjvIbGeiujYE'
-        await callback.message.reply_sticker(sticker_file_id_response)
-        await callback.message.answer(response)
+    if (user_role == enums.UserRole.MODERATOR or user_role == enums.UserRole.ADMIN):# and server_data['online'] == False:
+        if server_data['online'] == False:
+            wake_on_lan()
+            await callback.message.answer("Пинаю сервер...")
+            sticker_file_id_amen = 'CAACAgIAAxkBAAELrdxniTo5mzPdf7T7YaDiUQIjEf-WrwACdBUAAl9msEl5vX_OqlTFGTYE'
+            await callback.message.reply_sticker(sticker_file_id_amen)
+            await callback.message.answer("Сервер включается, подожди(~5мин). Чтобы узнать статус, нажми /start")
+        else:
+            await callback.message.answer("Сервер уже включен!")
 
     else:
         await callback.message.answer("Тебе не хватает прав!")
